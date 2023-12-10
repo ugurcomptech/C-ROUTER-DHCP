@@ -2,6 +2,45 @@
 
 Önceki yazılarımızda router'larımızı kullanarak ağ yönlendirmelerini nasıl gerçekleştireceğimizi inceledik, bu sefer ise router'ların ağlardaki cihazlara IP adresi ve diğer ağ konfigürasyon bilgilerini otomatik olarak dağıtan DHCP sunucusu olarak nasıl kullanılacağını ele alacağız.
 
+
+Network tasarımımızda 3 adet bilgisayar 1 adet switch 1 adet router bulunmaktadır.
+
+## ROUTER DHCP CONFİG
+
+```bash
+Router>en
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#service dhcp
+Router(config)#ip dhcp pool my_dhcp
+Router(dhcp-config)#network 192.168.1.0 255.255.255.0
+Router(dhcp-config)#default-router 192.168.1.1
+Router(dhcp-config)#dns-server 8.8.8.8
+```
+
+
+```bash
+Router(config)#interface fastEthernet 0/0
+Router(config-if)#ip address 192.168.1.1 255.255.255.0
+Router(config-if)#no shutdown
+```
+
+Yapılandırmaları yaptıktan sonra bilgisayarları Static'ten DHCP ye çekmeniz gerekmektedir.
+
+
+`Show ip dhcp binding` komutunu yazarak atanan IP adreslerini görebilirsiniz.
+
+```bash
+Router#show ip dhcp binding
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+192.168.1.2      00D0.BC4A.1205           --                     Automatic
+192.168.1.3      00D0.D38B.36EA           --                     Automatic
+192.168.1.4      0030.F2C9.E40A           --                     Automatic
+```
+
+
+
 ## ROUTER DHCP; ARTILARI VE EKSİLERİ
 
 ### Artılar:
